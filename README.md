@@ -9,51 +9,144 @@
 
 ## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+ Ataa – Crowdfunding Platform
+Description
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Ataa est une plateforme numérique de financement participatif permettant de connecter des donateurs avec des bénéficiaires ayant besoin d’une aide financière.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+La plateforme permet de créer des campagnes solidaires, de faire des dons en ligne et de suivre l’évolution des collectes en temps réel, tout en garantissant transparence, sécurité et simplicité d’utilisation.
 
-## Learning Laravel
+Objectifs du projet
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Faciliter le don en ligne pour des causes sociales ou personnelles
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Garantir la transparence des collectes
 
-## Laravel Sponsors
+Assurer la sécurité des utilisateurs et des transactions
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Offrir une expérience utilisateur simple et intuitive
 
-### Premium Partners
+Acteurs du système
+Visiteur (Guest)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Consulter les campagnes actives
 
-## Contributing
+Rechercher une campagne
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Filtrer les campagnes
 
-## Code of Conduct
+Voir les détails d’une campagne
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Créer un compte
 
-## Security Vulnerabilities
+Donateur (Donor)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Créer un compte
 
-## License
+Se connecter / se déconnecter
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Faire un don à une campagne
+
+Recevoir une confirmation de don
+
+Consulter l’historique des dons
+
+Ajouter / supprimer des campagnes favorites
+
+Recevoir des notifications sur les campagnes suivies
+
+Bénéficiaire (Beneficiary)
+
+Créer et gérer son profil
+
+Créer une campagne
+
+Modifier une campagne
+
+Soumettre une campagne à validation
+
+Suivre le montant collecté
+
+Recevoir des notifications sur l’état de la campagne
+
+Administrateur (Admin)
+
+Accéder au tableau de bord
+
+Valider ou rejeter les campagnes
+
+Suspendre des utilisateurs
+
+Supprimer des campagnes frauduleuses
+
+Consulter les transactions
+
+Recevoir les nouvelles demandes de campagnes
+
+Fonctionnalités principales
+Gestion des campagnes
+
+Création de campagnes
+
+Validation par l’administrateur
+
+Suivi du montant collecté
+
+Objectif financier
+
+Recherche et filtres
+
+Recherche par :
+
+titre
+
+description
+
+catégorie
+
+bénéficiaire
+
+Filtres disponibles :
+
+statut (active, terminée, en attente)
+
+catégorie
+
+objectif atteint
+
+Notifications
+
+Notifications internes
+
+Notifications par email (optionnel)
+
+Stack Technologique
+Frontend
+
+HTML5
+
+CSS3
+
+Tailwind CSS
+
+JavaScript
+
+React.js
+
+Backend
+
+PHP
+
+Laravel
+
+Base de données
+
+PostgreSQL
+
+Outils utilisés
+
+Design UI/UX : Figma
+
+Gestion de projet : Jira (SCRUM)
+
+Versionnage : GitHub
