@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ataa – Découvrir les Campagnes</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --dark: #0D0F14;
+    --dark2: #161A22;
+    --dark3: #1E2330;
+    --text: #E8E6E0;
+    --muted: #7A7F8E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--dark); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+  h1,h2,h3 { font-family: 'Playfair Display', serif; }
+
+  /* NAVBAR */
+  nav { position: fixed; top: 0; width: 100%; z-index: 100; backdrop-filter: blur(20px); background: rgba(13,15,20,0.85); border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; letter-spacing: -0.02em; color: var(--gold); }
+  .logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+  .btn-primary { background: var(--gold); color: var(--dark); padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(201,168,76,0.35); }
+  .btn-outline { background: transparent; color: var(--gold); padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: 1.5px solid var(--gold); transition: all 0.2s; }
+  .btn-outline:hover { background: rgba(201,168,76,0.1); }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 20%, rgba(201,168,76,0.12) 0%, transparent 70%); }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 60px 60px; }
+  .hero-content { text-align: center; max-width: 780px; position: relative; z-index: 1; animation: fadeUp 0.8s ease both; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); border-radius: 50px; padding: 0.4rem 1rem; font-size: 0.8rem; color: var(--gold); font-weight: 500; margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); line-height: 1.1; font-weight: 900; margin-bottom: 1.2rem; }
+  .hero h1 em { font-style: normal; color: var(--gold); }
+  .hero p { font-size: 1.1rem; color: var(--muted); max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .stats-row { display: flex; gap: 3rem; justify-content: center; margin-top: 4rem; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--gold); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* SEARCH & FILTERS */
+  .section { max-width: 1280px; margin: 0 auto; padding: 5rem 2rem; }
+  .search-bar { background: var(--dark2); border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; transition: border-color 0.2s; }
+  .search-bar:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }
+  .search-bar input { flex: 1; background: none; border: none; outline: none; color: var(--text); font-size: 1rem; font-family: 'DM Sans', sans-serif; }
+  .search-bar input::placeholder { color: var(--muted); }
+  .search-icon { color: var(--muted); }
+  .filters { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .filter-chip { padding: 0.45rem 1.1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; border: 1.5px solid rgba(201,168,76,0.2); color: var(--muted); background: transparent; }
+  .filter-chip:hover, .filter-chip.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+  .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .section-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 2.5rem; }
+
+  /* CARDS */
+  .grid-campaigns { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+  .card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; overflow: hidden; transition: all 0.3s; cursor: pointer; }
+  .card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.25); box-shadow: 0 20px 48px rgba(0,0,0,0.4); }
+  .card-img { height: 180px; background: linear-gradient(135deg, var(--dark3), var(--dark2)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .card-img .emoji { font-size: 3rem; }
+  .card-badge { position: absolute; top: 12px; right: 12px; padding: 0.3rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+  .badge-active { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+  .badge-urgent { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+  .badge-new { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); }
+  .card-body { padding: 1.25rem; }
+  .card-cat { font-size: 0.75rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+  .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .progress-wrap { margin-bottom: 0.75rem; }
+  .progress-bar { height: 5px; background: var(--dark3); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 10px; transition: width 1s ease; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+  .progress-meta strong { color: var(--gold); }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05); }
+  .card-author { font-size: 0.78rem; color: var(--muted); }
+  .btn-see { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.2); padding: 0.35rem 0.9rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-see:hover { background: var(--gold); color: var(--dark); }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .modal { background: var(--dark2); border: 1px solid rgba(201,168,76,0.2); border-radius: 24px; max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease both; }
+  .modal-header { padding: 2rem 2rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .modal-body { padding: 1.5rem 2rem 2rem; }
+  .modal-close { float: right; background: rgba(255,255,255,0.06); border: none; color: var(--muted); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .modal-close:hover { background: rgba(255,255,255,0.12); color: var(--text); }
+  .detail-stat { display: flex; gap: 1.5rem; margin: 1.5rem 0; }
+  .detail-stat-item { flex: 1; background: var(--dark3); border-radius: 12px; padding: 1rem; text-align: center; }
+  .detail-stat-item .val { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+  .detail-stat-item .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* AUTH MODAL */
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.5rem; font-weight: 500; }
+  .form-group input, .form-group select { width: 100%; background: var(--dark3); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 0.75rem 1rem; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+  .form-group select option { background: var(--dark3); }
+  .tab-row { display: flex; gap: 0; background: var(--dark3); border-radius: 10px; padding: 4px; margin-bottom: 1.5rem; }
+  .tab-btn { flex: 1; padding: 0.6rem; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
+  .tab-btn.active { background: var(--gold); color: var(--dark); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid rgba(255,255,255,0.06); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer .logo { font-size: 1.4rem; margin-bottom: 0.5rem; display: block; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { display: block; height: 2px; width: 24px; background: var(--text); border-radius: 2px; transition: 0.2s; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; position: absolute; top: 68px; left: 0; right: 0; background: var(--dark2); flex-direction: column; padding: 1.5rem 2rem; border-bottom: 1px solid rgba(201,168,76,0.15); gap: 1rem; }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    .grid-campaigns { grid-template-columns: 1fr; }
+    .stats-row { gap: 1.5rem; }
+    .detail-stat { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">Ata<span>a</span></div>
+    <div class="nav-links" id="navLinks">
+      <a href="#">Accueil</a>
+      <a href="#campaigns">Campagnes</a>
+      <a href="#">À propos</a>
+      <a href="#">Comment ça marche</a>
+      <button class="btn-outline" onclick="openModal('authModal')">Se connecter</button>
+      <button class="btn-primary" onclick="openModal('authModal')">S'inscrire</button>
+    </div>
+    <div class="hamburger" onclick="toggleNav()" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span>✦</span> Plateforme de financement participatif
+    </div>
+    <h1>Soutenez des <em>causes</em><br>qui changent des vies</h1>
+    <p>Ataa connecte des donateurs avec des bénéficiaires ayant besoin d'aide. Transparents, sécurisés, humains.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" style="padding: 0.8rem 2rem; font-size: 1rem;" onclick="document.getElementById('campaigns').scrollIntoView({behavior:'smooth'})">
+        Voir les campagnes
+      </button>
+      <button class="btn-outline" style="padding: 0.8rem 2rem; font-size: 1rem;" onclick="openModal('authModal')">
+        Créer un compte
+      </button>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">2 400+</div><div class="stat-label">Campagnes actives</div></div>
+      <div class="stat"><div class="stat-num">48K+</div><div class="stat-label">Donateurs</div></div>
+      <div class="stat"><div class="stat-num">12M DH</div><div class="stat-label">Collectés</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CAMPAGNES -->
+<div class="section" id="campaigns">
+  <h2 class="section-title">Campagnes en cours</h2>
+  <p class="section-sub">Découvrez des causes auxquelles vous pouvez contribuer aujourd'hui</p>
+
+  <div class="search-bar">
+    <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Rechercher une campagne, une cause, un bénéficiaire..." oninput="filterCards(this.value)">
+  </div>
+
+  <div class="filters">
+    <button class="filter-chip active" onclick="setFilter(this,'all')">Toutes</button>
+    <button class="filter-chip" onclick="setFilter(this,'active')">Actives</button>
+    <button class="filter-chip" onclick="setFilter(this,'urgent')">Urgentes</button>
+    <button class="filter-chip" onclick="setFilter(this,'sante')">Santé</button>
+    <button class="filter-chip" onclick="setFilter(this,'education')">Éducation</button>
+    <button class="filter-chip" onclick="setFilter(this,'famille')">Famille</button>
+    <button class="filter-chip" onclick="setFilter(this,'handicap')">Handicap</button>
+  </div>
+
+  <div class="grid-campaigns" id="campaignsGrid">
+    <!-- Cards injected by JS -->
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="logo">Ataa</span>
+  <p>Plateforme de financement participatif · Transparente & Sécurisée</p>
+  <p style="margin-top:0.5rem">© 2025 Ataa · Tous droits réservés</p>
+</footer>
+
+<!-- CAMPAIGN DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal('detailModal')">✕</button>
+      <div id="detailCat" style="font-size:0.75rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;"></div>
+      <h2 id="detailTitle" style="font-size:1.5rem;font-weight:700;"></h2>
+      <p id="detailBenef" style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;"></p>
+    </div>
+    <div class="modal-body">
+      <div class="detail-stat">
+        <div class="detail-stat-item"><div class="val" id="detailPct"></div><div class="lbl">Objectif atteint</div></div>
+        <div class="detail-stat-item"><div class="val" id="detailAmt"></div><div class="lbl">Collecté</div></div>
+        <div class="detail-stat-item"><div class="val" id="detailDays"></div><div class="lbl">Jours restants</div></div>
+      </div>
+      <div class="progress-wrap" style="margin-bottom:1.5rem;">
+        <div class="progress-bar"><div class="progress-fill" id="detailProgress" style="width:0%"></div></div>
+      </div>
+      <p id="detailDesc" style="color:var(--muted);line-height:1.8;font-size:0.95rem;margin-bottom:1.5rem;"></p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <button class="btn-primary" style="flex:1;padding:0.8rem;" onclick="closeModal('detailModal');openModal('authModal')">
+          💛 Faire un don
+        </button>
+        <button class="btn-outline" style="flex:1;padding:0.8rem;" onclick="closeModal('detailModal');openModal('authModal')">
+          ♡ Ajouter aux favoris
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+      <h2 style="font-size:1.6rem;font-weight:700;">Bienvenue sur Ataa</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-top:0.3rem;">Rejoignez notre communauté de solidarité</p>
+    </div>
+    <div class="modal-body">
+      <div class="tab-row">
+        <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Se connecter</button>
+        <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">S'inscrire</button>
+      </div>
+      <!-- Login Form -->
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="votre@email.com">
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" style="width:100%;padding:0.85rem;font-size:1rem;margin-top:0.5rem;" onclick="closeModal('authModal')">Se connecter</button>
+        <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--muted);">Mot de passe oublié ? <a href="#" style="color:var(--gold);">Réinitialiser</a></p>
+      </div>
+      <!-- Register Form -->
+      <div id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label>Nom complet</label>
+          <input type="text" placeholder="Votre nom">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="votre@email.com">
+        </div>
+        <div class="form-group">
+          <label>Je suis</label>
+          <select>
+            <option>Donateur – je veux aider</option>
+            <option>Bénéficiaire – j'ai besoin d'aide</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" placeholder="Minimum 8 caractères">
+        </div>
+        <button class="btn-primary" style="width:100%;padding:0.85rem;font-size:1rem;margin-top:0.5rem;" onclick="closeModal('authModal')">Créer mon compte</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const campaigns = [
+  { id:1, title:"Aide pour opération cardiaque", category:"Santé", cat:"sante", beneficiary:"Amina B.", description:"Amina, 8 ans, souffre d'une malformation cardiaque congénitale. L'opération est urgente et nécessite 45 000 DH que sa famille ne peut pas réunir seule.", collected:32000, goal:45000, days:12, emoji:"❤️‍🩹", badge:"urgent", badgeLabel:"Urgent" },
+  { id:2, title:"Frais scolaires pour 3 enfants", category:"Éducation", cat:"education", beneficiary:"Famille Moussaoui", description:"Suite au décès du père, la mère élève seule ses 3 enfants. Elle a besoin d'aide pour couvrir les frais de scolarité et les fournitures scolaires.", collected:8500, goal:15000, days:30, emoji:"📚", badge:"active", badgeLabel:"Active" },
+  { id:3, title:"Fauteuil roulant adapté", category:"Handicap", cat:"handicap", beneficiary:"Karim L.", description:"Karim a été victime d'un accident de la route et a besoin d'un fauteuil roulant électrique adapté à son état. Son assurance ne couvre pas ce type d'équipement.", collected:18000, goal:22000, days:7, emoji:"♿", badge:"urgent", badgeLabel:"Urgent" },
+  { id:4, title:"Logement d'urgence pour famille", category:"Famille", cat:"famille", beneficiary:"Famille Rachidi", description:"Suite à un incendie qui a détruit leur maison, cette famille de 5 personnes vit dans la rue. Aide pour loyer et mobilier de base.", collected:5000, goal:30000, days:45, emoji:"🏠", badge:"new", badgeLabel:"Nouveau" },
+  { id:5, title:"Traitement contre le cancer", category:"Santé", cat:"sante", beneficiary:"Fatima Z.", description:"Fatima, 42 ans, diagnostiquée d'un cancer du sein. La chimiothérapie coûte très cher et sa famille cherche à couvrir les frais de traitement.", collected:61000, goal:80000, days:20, emoji:"🎗️", badge:"active", badgeLabel:"Active" },
+  { id:6, title:"Formation professionnelle", category:"Éducation", cat:"education", beneficiary:"Youssef M.", description:"Youssef, jeune sans emploi de 22 ans, veut se former en développement web pour trouver un travail stable. Il n'a pas les moyens de payer la formation.", collected:4200, goal:8000, days:60, emoji:"💻", badge:"new", badgeLabel:"Nouveau" },
+];
+
+let activeFilter = 'all';
+let searchQuery = '';
+
+function renderCards() {
+  const grid = document.getElementById('campaignsGrid');
+  const filtered = campaigns.filter(c => {
+    const matchFilter = activeFilter === 'all' || c.cat === activeFilter || (activeFilter === 'active' && c.badge === 'active') || (activeFilter === 'urgent' && c.badge === 'urgent');
+    const matchSearch = !searchQuery || c.title.toLowerCase().includes(searchQuery) || c.description.toLowerCase().includes(searchQuery) || c.beneficiary.toLowerCase().includes(searchQuery) || c.category.toLowerCase().includes(searchQuery);
+    return matchFilter && matchSearch;
+  });
+  grid.innerHTML = filtered.map(c => {
+    const pct = Math.round((c.collected / c.goal) * 100);
+    return `
+    <div class="card" onclick="openDetail(${c.id})">
+      <div class="card-img" style="background:linear-gradient(135deg, #1a1f2e, #232838)">
+        <span class="emoji">${c.emoji}</span>
+        <span class="card-badge badge-${c.badge}">${c.badgeLabel}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">${c.category}</div>
+        <div class="card-title">${c.title}</div>
+        <div class="card-desc">${c.description}</div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div class="progress-meta"><span><strong>${pct}%</strong> atteint</span><span>${c.collected.toLocaleString()} / ${c.goal.toLocaleString()} DH</span></div>
+        </div>
+        <div class="card-footer">
+          <span class="card-author">👤 ${c.beneficiary}</span>
+          <button class="btn-see" onclick="event.stopPropagation();openDetail(${c.id})">Voir →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openDetail(id) {
+  const c = campaigns.find(x => x.id === id);
+  const pct = Math.round((c.collected / c.goal) * 100);
+  document.getElementById('detailCat').textContent = c.category;
+  document.getElementById('detailTitle').textContent = c.title;
+  document.getElementById('detailBenef').textContent = '👤 ' + c.beneficiary;
+  document.getElementById('detailPct').textContent = pct + '%';
+  document.getElementById('detailAmt').textContent = c.collected.toLocaleString() + ' DH';
+  document.getElementById('detailDays').textContent = c.days + ' j';
+  document.getElementById('detailDesc').textContent = c.description;
+  document.getElementById('detailProgress').style.width = pct + '%';
+  openModal('detailModal');
+}
+
+function setFilter(el, f) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activeFilter = f;
+  renderCards();
+}
+
+function filterCards(q) {
+  searchQuery = q.toLowerCase();
+  renderCards();
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); }));
+
+function switchTab(tab) {
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+}
+
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+renderCards();
+</script>
+</body>
+</html>
