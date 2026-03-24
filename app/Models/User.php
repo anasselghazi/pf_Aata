@@ -47,4 +47,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function campagnes()
+    {
+    return $this->hasMany(Campagne::class, 'beneficiaire_id');
+    }
+
+    public function dons()
+    {
+    return $this->hasMany(Don::class, 'donateur_id');
+    }
+
+    public function favoris()
+    {
+    return $this->belongsToMany(Campagne::class, 'favoris', 'donateur_id', 'campagne_id');
+    }
+
+    public function notifications()
+    {
+    return $this->hasMany(Notification::class);
+    }
+
 }
