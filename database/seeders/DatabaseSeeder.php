@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Categorie;
+use App\Models\Campagne;
+use App\Models\Don;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -10,16 +13,32 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // 1. المشرف
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name'     => 'Admin Ataa',
+            'email'    => 'admin@ataa.com',
+            'role'     => 'admin',
+            'password' => bcrypt('password123'),
         ]);
+
+        // 2. الفئات
+        $categories = ['Santé', 'Éducation', 'Pauvreté', 'Environnement'];
+        foreach ($categories as $cat) {
+            Categorie::create(['libelle' => $cat]);
+        }
+
+        // 3. المتبرعون
+        User::factory(5)->create(['role' => 'donateur']);
+
+        // 4. المستفيدون — يجب إنشاؤهم قبل الحملات
+        User::factory(3)->create(['role' => 'beneficiaire']);
+
+        // 5. الحملات — الآن مضمون إيجاد مستفيد
+        Campagne::factory(10)->create();
+
+        // 6. التبرعات
+        Don::factory(20)->create();
     }
 }
