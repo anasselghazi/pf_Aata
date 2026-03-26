@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampagneController;
+use App\Http\Controllers\AdminController;
 
 
 Route::get('/', fn() => view('welcome'))->name('home');
@@ -32,4 +33,24 @@ Route::middleware(['auth', 'role:beneficiaire'])->group(function () {
     Route::get('/campagnes/{campagne}/edit', [CampagneController::class, 'edit'])->name('campagnes.edit');
     Route::put('/campagnes/{campagne}', [CampagneController::class, 'update'])->name('campagnes.update');
     Route::delete('/campagnes/{campagne}', [CampagneController::class, 'destroy'])->name('campagnes.destroy');
+});
+
+
+
+//  Admin 
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Gestion des campagnes
+    Route::post('/campagnes/{campagne}/approuver', [AdminController::class, 'approuver'])->name('campagnes.approuver');
+    Route::post('/campagnes/{campagne}/rejeter', [AdminController::class, 'rejeter'])->name('campagnes.rejeter');
+    Route::delete('/campagnes/{campagne}', [AdminController::class, 'supprimerCampagne'])->name('campagnes.destroy');
+
+    // Gestion des utilisateurs
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::post('/users/{user}/suspendre', [AdminController::class, 'suspendre'])->name('users.suspendre');
+    Route::post('/users/{user}/reactiver', [AdminController::class, 'reactiver'])->name('users.reactiver');
+
+    // Transactions
+    Route::get('/transactions', [AdminController::class, 'transactions'])->name('transactions');
 });
