@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampagneController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DonController;
+use App\Http\Controllers\FavoriController;
 
 
 Route::get('/', fn() => view('welcome'))->name('home');
@@ -53,4 +55,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Transactions
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('transactions');
+});
+
+
+// ===== Dons (donateur seulement) =====
+Route::middleware(['auth', 'role:donateur'])->group(function () {
+    Route::post('/dons', [DonController::class, 'store'])->name('dons.store');
+    Route::get('/dons/historique', [DonController::class, 'historique'])->name('dons.historique');
+});
+
+// ===== Favoris (donateur seulement) =====
+Route::middleware(['auth', 'role:donateur'])->prefix('favoris')->name('favoris.')->group(function () {
+    Route::get('/', [FavoriController::class, 'index'])->name('index');
+    Route::post('/{campagne}', [FavoriController::class, 'store'])->name('store');
+    Route::delete('/{campagne}', [FavoriController::class, 'destroy'])->name('destroy');
 });
