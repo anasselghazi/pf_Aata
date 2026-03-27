@@ -7,6 +7,7 @@ use App\Http\Controllers\CampagneController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DonController;
 use App\Http\Controllers\FavoriController;
+use App\Http\Controllers\NotificationController;
 
 
 Route::get('/', fn() => view('welcome'))->name('home');
@@ -69,4 +70,11 @@ Route::middleware(['auth', 'role:donateur'])->prefix('favoris')->name('favoris.'
     Route::get('/', [FavoriController::class, 'index'])->name('index');
     Route::post('/{campagne}', [FavoriController::class, 'store'])->name('store');
     Route::delete('/{campagne}', [FavoriController::class, 'destroy'])->name('destroy');
+});
+// ===== Notifications =====
+Route::middleware('auth')->prefix('notifications')->name('notifications.')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('index');
+    Route::post('/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('markAsRead');
+    Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('markAllAsRead');
+    Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
 });

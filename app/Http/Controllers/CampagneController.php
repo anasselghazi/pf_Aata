@@ -6,6 +6,9 @@ use App\Models\Campagne;
 use App\Models\Categorie;
 use App\Http\Requests\CampagneRequest;
 use Illuminate\Http\Request;
+use App\Notifications\NouvelleCampagneSoumise;
+use App\Notifications\CampagneObjectifAtteint;
+use App\Models\User;
 
 class CampagneController extends Controller
 {
@@ -46,6 +49,12 @@ class CampagneController extends Controller
             'statut'             => 'en_attente',
         ]);
 
+
+        // Notifier l'admin
+    $admin = User::where('role', 'admin')->first();
+    $admin->notify(new NouvelleCampagneSoumise($campagne));
+
+    
         return redirect()->route('beneficiaire.dashboard')
             ->with('success', 'Campagne soumise avec succès, en attente de validation');
     }

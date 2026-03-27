@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Campagne;
 use App\Models\Don;
+use App\Notifications\CampagneApprouvee;
+use App\Notifications\CampagneRejetee;
 
 class AdminController extends Controller
 {
@@ -31,6 +33,8 @@ class AdminController extends Controller
     {
         $campagne->update(['statut' => 'active']);
 
+        $campagne->beneficiaire->notify(new CampagneApprouvee($campagne));
+
         return redirect()->route('admin.dashboard')
             ->with('success', 'Campagne approuvée avec succès');
     }
@@ -40,6 +44,8 @@ class AdminController extends Controller
     {
         $campagne->update(['statut' => 'rejetee']);
 
+        $campagne->beneficiaire->notify(new CampagneRejetee($campagne));
+        
         return redirect()->route('admin.dashboard')
             ->with('success', 'Campagne rejetée');
     }
