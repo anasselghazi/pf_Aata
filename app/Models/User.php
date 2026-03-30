@@ -62,9 +62,6 @@ class User extends Authenticatable
     return $this->belongsToMany(Campagne::class, 'favoris', 'donateur_id', 'campagne_id');
     }
 
-    public function notifications()
-    {
-    return $this->hasMany(Notification::class);
-    }
+    
 
 }

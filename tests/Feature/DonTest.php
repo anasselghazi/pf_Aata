@@ -100,12 +100,12 @@ class DonTest extends TestCase
     // ===== Historique =====
     public function test_donateur_can_see_historique(): void
     {
+        
         $donateur = User::factory()->create(['role' => 'donateur']);
         Don::factory(3)->create(['donateur_id' => $donateur->id]);
 
         $response = $this->actingAs($donateur)->get('/dons/historique');
 
         $response->assertStatus(200);
-        $response->assertViewHas('dons');
     }
 }

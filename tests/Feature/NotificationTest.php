@@ -4,14 +4,15 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Models\Campagne;
-use App\Notifications\CampagneApprouvee;
-use App\Notifications\CampagneRejetee;
-use App\Notifications\CampagneObjectifAtteint;
-use App\Notifications\NouveauDon;
-use App\Notifications\NouvelleCampagneSoumise;
+use App\Notifications\CampagneApprouveeNotification;
+use App\Notifications\CampagneRejeteeNotification;
+use App\Notifications\NouvelleCampagneSoumiseNotification;
+use App\Notifications\CampagneObjectifAtteintNotification;
+use App\Notifications\NouveauDonNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
+use App\Models\Categorie;
 
 class NotificationTest extends TestCase
 {
@@ -24,7 +25,7 @@ class NotificationTest extends TestCase
 
         $admin        = User::factory()->create(['role' => 'admin']);
         $beneficiaire = User::factory()->create(['role' => 'beneficiaire']);
-        $categorie    = \App\Models\Categorie::factory()->create();
+        $categorie    = Categorie::factory()->create();
 
         $this->actingAs($beneficiaire)->post('/campagnes', [
             'titre'              => 'Campagne test',
@@ -33,8 +34,7 @@ class NotificationTest extends TestCase
             'categorie_id'       => $categorie->id,
         ]);
 
-        Notification::assertSentTo($admin, NouvelleCampagneSoumise::class);
-    }
+        Notification::assertSentTo($admin, NouvelleCampagneSoumiseNotification::class);    }
 
     // ===== Approbation campagne =====
     public function test_beneficiaire_receives_notification_when_campagne_approved(): void
@@ -48,9 +48,10 @@ class NotificationTest extends TestCase
             'statut'          => 'en_attente',
         ]);
 
-        $this->actingAs($admin)->post("/admin/campagnes/{$campagne->id}/approuver");
+        $this->actingAs($admin)->post("/admin/campagnes/{$campagne->slug}/approuver");
 
-        Notification::assertSentTo($beneficiaire, CampagneApprouvee::class);
+        Notification::assertSentTo($beneficiaire, CampagneApprouveeNotification::class);
+
     }
 
     // ===== Rejet campagne =====
@@ -65,9 +66,10 @@ class NotificationTest extends TestCase
             'statut'          => 'en_attente',
         ]);
 
-        $this->actingAs($admin)->post("/admin/campagnes/{$campagne->id}/rejeter");
+        $this->actingAs($admin)->post("/admin/campagnes/{$campagne->slug}/rejeter");
 
-        Notification::assertSentTo($beneficiaire, CampagneRejetee::class);
+        Notification::assertSentTo($beneficiaire, CampagneRejeteeNotification::class);
+
     }
 
     // ===== Don effectué =====
@@ -77,7 +79,7 @@ class NotificationTest extends TestCase
 
         $donateur = User::factory()->create(['role' => 'donateur']);
         $campagne = Campagne::factory()->create([
-            'statut'             => 'active',
+            'statut'             => 'approuvee',
             'objectif_financier' => 5000,
         ]);
 
@@ -86,7 +88,7 @@ class NotificationTest extends TestCase
             'campagne_id' => $campagne->id,
         ]);
 
-        Notification::assertSentTo($donateur, NouveauDon::class);
+        Notification::assertSentTo($donateur, NouveauDonNotification::class);
     }
 
     // ===== Objectif atteint =====
@@ -98,7 +100,7 @@ class NotificationTest extends TestCase
         $beneficiaire = User::factory()->create(['role' => 'beneficiaire']);
         $campagne     = Campagne::factory()->create([
             'beneficiaire_id'    => $beneficiaire->id,
-            'statut'             => 'active',
+            'statut'             => 'approuvee',
             'objectif_financier' => 100,
             'montant_collecte'   => 0,
         ]);
@@ -108,6 +110,6 @@ class NotificationTest extends TestCase
             'campagne_id' => $campagne->id,
         ]);
 
-        Notification::assertSentTo($beneficiaire, CampagneObjectifAtteint::class);
+        Notification::assertSentTo($beneficiaire, CampagneObjectifAtteintNotification::class);
     }
 }

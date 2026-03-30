@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Campagne;
 use App\Models\Don;
-use App\Notifications\CampagneApprouvee;
-use App\Notifications\CampagneRejetee;
+use App\Notifications\CampagneApprouveeNotification;
+use App\Notifications\CampagneRejeteeNotification;
 
 class AdminController extends Controller
 {
-    // Tableau de bord
     public function dashboard()
     {
         $stats = [
@@ -28,36 +27,34 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('stats', 'campagnes_attente'));
     }
 
-    // Approuver une campagne
     public function approuver(Campagne $campagne)
     {
-        $campagne->update(['statut' => 'active']);
+        $campagne->update(['statut' => 'approuvee']);
 
-        $campagne->beneficiaire->notify(new CampagneApprouvee($campagne));
+        // Notifier le bénéficiaire
+        $campagne->beneficiaire->notify(new CampagneApprouveeNotification($campagne));
 
         return redirect()->route('admin.dashboard')
             ->with('success', 'Campagne approuvée avec succès');
     }
 
-    // Rejeter une campagne
     public function rejeter(Campagne $campagne)
     {
         $campagne->update(['statut' => 'rejetee']);
 
-        $campagne->beneficiaire->notify(new CampagneRejetee($campagne));
-        
+        // Notifier le bénéficiaire
+        $campagne->beneficiaire->notify(new CampagneRejeteeNotification($campagne));
+
         return redirect()->route('admin.dashboard')
             ->with('success', 'Campagne rejetée');
     }
 
-    // Lister tous les utilisateurs
     public function users()
     {
         $users = User::where('role', '!=', 'admin')->latest()->paginate(10);
         return view('admin.users', compact('users'));
     }
 
-    // Suspendre un compte
     public function suspendre(User $user)
     {
         $user->update(['est_suspendu' => true]);
@@ -66,7 +63,6 @@ class AdminController extends Controller
             ->with('success', 'Compte suspendu avec succès');
     }
 
-    // Réactiver un compte
     public function reactiver(User $user)
     {
         $user->update(['est_suspendu' => false]);
@@ -75,7 +71,6 @@ class AdminController extends Controller
             ->with('success', 'Compte réactivé avec succès');
     }
 
-    // Supprimer une campagne
     public function supprimerCampagne(Campagne $campagne)
     {
         $campagne->delete();
@@ -84,7 +79,6 @@ class AdminController extends Controller
             ->with('success', 'Campagne supprimée avec succès');
     }
 
-    // Lister toutes les transactions
     public function transactions()
     {
         $dons = Don::with(['donateur', 'campagne'])

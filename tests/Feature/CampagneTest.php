@@ -14,7 +14,8 @@ class CampagneTest extends TestCase
 
     // ===== Index =====
     public function test_visitor_can_see_active_campagnes(): void
-    {
+    {    
+        
         // FIX 1: On remplace 'active' par 'approuvee' (ou 'en_cours' selon ta migration)
         Campagne::factory(3)->create(['statut' => 'approuvee']); 
         Campagne::factory(2)->create(['statut' => 'en_attente']);
@@ -65,57 +66,57 @@ class CampagneTest extends TestCase
     }
 
     // ===== Edit =====
-    public function test_beneficiaire_can_edit_own_campagne(): void
-    {
-        $beneficiaire = User::factory()->create(['role' => 'beneficiaire']);
-        $categorie    = Categorie::factory()->create();
-        $campagne     = Campagne::factory()->create([
-            'beneficiaire_id' => $beneficiaire->id,
-            'statut'          => 'en_attente',
-        ]);
+public function test_beneficiaire_can_edit_own_campagne(): void
+{
+    $beneficiaire = User::factory()->create(['role' => 'beneficiaire']);
+    $categorie    = Categorie::factory()->create();
+    $campagne     = Campagne::factory()->create([
+        'beneficiaire_id' => $beneficiaire->id,
+        'statut'          => 'en_attente',
+    ]);
 
-        $response = $this->actingAs($beneficiaire)->put("/campagnes/{$campagne->id}", [
-            'titre'              => 'Titre modifié',
-            'description'        => 'Description modifiée',
-            'objectif_financier' => 8000,
-            'categorie_id'       => $categorie->id,
-        ]);
+    $response = $this->actingAs($beneficiaire)->put("/campagnes/{$campagne->slug}", [
+        'titre'              => 'Titre modifié',
+        'description'        => 'Description modifiée',
+        'objectif_financier' => 8000,
+        'categorie_id'       => $categorie->id,
+    ]);
 
-        $response->assertRedirect('/beneficiaire/dashboard');
-        $this->assertDatabaseHas('campagnes', ['titre' => 'Titre modifié']);
-    }
+    $response->assertRedirect('/beneficiaire/dashboard');
+    $this->assertDatabaseHas('campagnes', ['titre' => 'Titre modifié']);
+}
 
-    public function test_beneficiaire_cannot_edit_other_campagne(): void
-    {
-        $beneficiaire1 = User::factory()->create(['role' => 'beneficiaire']);
-        $beneficiaire2 = User::factory()->create(['role' => 'beneficiaire']);
-        $categorie     = Categorie::factory()->create();
-        $campagne      = Campagne::factory()->create([
-            'beneficiaire_id' => $beneficiaire1->id,
-            'statut'          => 'en_attente',
-        ]);
+public function test_beneficiaire_cannot_edit_other_campagne(): void
+{
+    $beneficiaire1 = User::factory()->create(['role' => 'beneficiaire']);
+    $beneficiaire2 = User::factory()->create(['role' => 'beneficiaire']);
+    $categorie     = Categorie::factory()->create();
+    $campagne      = Campagne::factory()->create([
+        'beneficiaire_id' => $beneficiaire1->id,
+        'statut'          => 'en_attente',
+    ]);
 
-        $response = $this->actingAs($beneficiaire2)->put("/campagnes/{$campagne->id}", [
-            'titre'              => 'Titre modifié',
-            'description'        => 'Description modifiée',
-            'objectif_financier' => 8000,
-            'categorie_id'       => $categorie->id,
-        ]);
+    $response = $this->actingAs($beneficiaire2)->put("/campagnes/{$campagne->slug}", [
+        'titre'              => 'Titre modifié',
+        'description'        => 'Description modifiée',
+        'objectif_financier' => 8000,
+        'categorie_id'       => $categorie->id,
+    ]);
 
-        $response->assertStatus(403);
-    }
+    $response->assertStatus(403);
+}
 
-    // ===== Delete =====
-    public function test_beneficiaire_can_delete_own_campagne(): void
-    {
-        $beneficiaire = User::factory()->create(['role' => 'beneficiaire']);
-        $campagne     = Campagne::factory()->create([
-            'beneficiaire_id' => $beneficiaire->id,
-        ]);
+// ===== Delete =====
+public function test_beneficiaire_can_delete_own_campagne(): void
+{
+    $beneficiaire = User::factory()->create(['role' => 'beneficiaire']);
+    $campagne     = Campagne::factory()->create([
+        'beneficiaire_id' => $beneficiaire->id,
+    ]);
 
-        $response = $this->actingAs($beneficiaire)->delete("/campagnes/{$campagne->id}");
+    $response = $this->actingAs($beneficiaire)->delete("/campagnes/{$campagne->slug}");
 
-        $response->assertRedirect('/beneficiaire/dashboard');
-        $this->assertDatabaseMissing('campagnes', ['id' => $campagne->id]);
-    }
+    $response->assertRedirect('/beneficiaire/dashboard');
+    $this->assertDatabaseMissing('campagnes', ['id' => $campagne->id]);
+}
 }
