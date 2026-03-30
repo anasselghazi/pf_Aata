@@ -17,6 +17,8 @@ class NouvelleCampagneSoumise extends Notification
     public function toDatabase(object $notifiable): array
     {
         return [
+            'titre'       => 'Nouvelle campagne à valider', 
+            
             'message'     => 'Nouvelle campagne soumise : "' . $this->campagne->titre . '" en attente de validation',
             'campagne_id' => $this->campagne->id,
             'type'        => 'nouvelle_campagne_soumise',

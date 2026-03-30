@@ -15,7 +15,7 @@ class CampagneController extends Controller
     // Afficher toutes les campagnes actives (visiteurs + donateurs)
     public function index()
     {
-        $campagnes = Campagne::where('statut', 'active')
+        $campagnes = Campagne::where('statut', 'approuvee')
             ->with(['categorie', 'beneficiaire'])
             ->latest()
             ->paginate(10);
@@ -37,24 +37,26 @@ class CampagneController extends Controller
     }
 
     // Enregistrer une nouvelle campagne
+    // Enregistrer une nouvelle campagne
     public function store(CampagneRequest $request)
     {
-        Campagne::create([
-            'titre'              => $request->titre,
-            'description'        => $request->description,
+        // 1. Assigner la création à la variable $campagne
+        $campagne = Campagne::create([
+            'titre' => $request->titre,
+            'description' => $request->description,
             'objectif_financier' => $request->objectif_financier,
-            'categorie_id'       => $request->categorie_id,
-            'beneficiaire_id'    => auth()->id(),
-            'montant_collecte'   => 0,
-            'statut'             => 'en_attente',
+            'categorie_id' => $request->categorie_id,
+            'beneficiaire_id' => auth()->id(),
+            'montant_collecte'=> 0,
+            'statut' => 'en_attente',
         ]);
 
+        // 2. Notifier l'admin
+        $admin = User::where('role', 'admin')->first();
+        if ($admin) { // Toujours bien de vérifier si l'admin existe
+            $admin->notify(new NouvelleCampagneSoumise($campagne));
+        }
 
-        // Notifier l'admin
-    $admin = User::where('role', 'admin')->first();
-    $admin->notify(new NouvelleCampagneSoumise($campagne));
-
-    
         return redirect()->route('beneficiaire.dashboard')
             ->with('success', 'Campagne soumise avec succès, en attente de validation');
     }
@@ -86,10 +88,10 @@ class CampagneController extends Controller
         }
 
         $campagne->update([
-            'titre'              => $request->titre,
-            'description'        => $request->description,
+            'titre' => $request->titre,
+            'description' => $request->description,
             'objectif_financier' => $request->objectif_financier,
-            'categorie_id'       => $request->categorie_id,
+            'categorie_id' => $request->categorie_id,
         ]);
 
         return redirect()->route('beneficiaire.dashboard')

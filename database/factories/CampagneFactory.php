@@ -20,16 +20,8 @@ class CampagneFactory extends Factory
             'montant_collecte'    => 0,
             'statut'              => 'en_attente',
 
-            // يأخذ مستفيداً عشوائياً من الموجودين في قاعدة البيانات
-            'beneficiaire_id' => User::where('role', 'beneficiaire')
-                                     ->inRandomOrder()
-                                     ->first()
-                                     ?->id,
-
-            // يأخذ فئة عشوائية من الموجودات في قاعدة البيانات
-            'categorie_id'    => Categorie::inRandomOrder()
-                                          ->first()
-                                          ?->id,
+            'beneficiaire_id' => User::factory(), 
+            'categorie_id' => Categorie::factory(),
         ];
     }
 }
