@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DonController;
 use App\Http\Controllers\FavoriController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SearchController;
 
 
 Route::get('/', fn() => view('welcome'))->name('home');
@@ -78,3 +79,7 @@ Route::middleware('auth')->prefix('notifications')->name('notifications.')->grou
     Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('markAllAsRead');
     Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
 });
+
+// ===== Search & Filtres =====
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+
