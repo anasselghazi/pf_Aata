@@ -10,9 +10,11 @@ class SearchController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Campagne::query()->where('statut', 'approuvee')
-            ->with(['categorie', 'beneficiaire']);
+        $query = Campagne::query()->with(['categorie', 'beneficiaire']);
 
+        if (!$request->filled('statut')) {
+        $query->where('statut', 'approuvee');
+    }    
         // Recherche par mot-clé
         if ($request->filled('q')) {
             $query->where(function ($q) use ($request) {
